@@ -21,7 +21,7 @@ const getCars = async (req, res) => {
     if (maxPrice && minPrice) obj.price = { $gte: +minPrice, $lte: +maxPrice }
     if (maxMileage && minMileage)
       obj['OEM.mileage'] = { $gte: minMileage, $lte: maxMileage }
-    if (color) obj.orginalPaint = ['red']
+    if (color) obj.orginalPaint = color
     if (text) obj.title = { $regex: text, $options: 'i' }
 
     page = page || 1
