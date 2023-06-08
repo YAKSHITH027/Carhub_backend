@@ -2,7 +2,12 @@ const { OEM_SpecsModel } = require('../models/OEM_Specs.model')
 
 const getCarSpecs = async (req, res) => {
   try {
-    let carSpecs = await OEM_SpecsModel.find()
+    let { text } = req.query
+    text = text || ''
+
+    let carSpecs = await OEM_SpecsModel.find({
+      modelName: { $regex: text, $options: 'i' },
+    })
     res.status(200).send(carSpecs)
   } catch (error) {
     res.status(500).send({ msg: error.message })
