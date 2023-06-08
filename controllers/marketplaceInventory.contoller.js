@@ -1,8 +1,49 @@
 const { CarDetailsModel } = require('../models/Marketplace_Inventory.model')
 
 const getCars = async (req, res) => {
+  // price: { $gte: minPrice, $lte: maxPrice },
+  //   colors: { $in: colors },
+  //   kms: { $gte: minMileage, $lte: maxMileage }
+
   try {
-    let allCars = await CarDetailsModel.find()
+    let {
+      maxPrice,
+      minPrice,
+      maxMileage,
+      minMileage,
+      color,
+      page,
+      limit,
+      text,
+    } = req.query
+    console.log('dd', req.query)
+    let obj = {}
+    if (maxPrice && minPrice) obj.price = { $gte: +minPrice, $lte: +maxPrice }
+    if (maxMileage && minMileage)
+      obj['OEM.mileage'] = { $gte: minMileage, $lte: maxMileage }
+    if (color) obj.originalPaint = color
+    if (text) obj.title = { $regex: text, $options: 'i' }
+
+    page = page || 1
+
+    limit = limit || 15
+    console.log('obj', obj)
+
+    let allCars = await CarDetailsModel.find({
+      ...obj,
+    })
+      .skip((page - 1) * limit)
+      .limit(limit)
+    const totalCars = await CarDetailsModel.countDocuments()
+    res.status(200).send({ allCars, totalCars })
+  } catch (error) {
+    res.status(500).send({ msg: error.message })
+  }
+}
+const getDealersCar = async (req, res) => {
+  let dealerId = req.params.dealerId
+  try {
+    let allCars = await CarDetailsModel.find({ userId: dealerId })
     res.status(200).send(allCars)
   } catch (error) {
     res.status(500).send({ msg: error.message })
@@ -42,4 +83,4 @@ const updateCar = async (req, res) => {
   }
 }
 
-module.exports = { addCar, getCars, updateCar, deleteCar }
+module.exports = { addCar, getCars, updateCar, deleteCar, getDealersCar }
