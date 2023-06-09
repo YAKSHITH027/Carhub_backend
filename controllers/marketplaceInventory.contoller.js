@@ -40,6 +40,16 @@ const getCars = async (req, res) => {
     res.status(500).send({ msg: error.message })
   }
 }
+const getSingleCar = async (req, res) => {
+  let carId = req.params.carId
+
+  try {
+    let singleCar = await CarDetailsModel.findOne({ _id: carId })
+    res.status(200).send(singleCar)
+  } catch (error) {
+    res.status(500).send({ msg: error.message })
+  }
+}
 const getDealersCar = async (req, res) => {
   let dealerId = req.body.userId
 
@@ -84,4 +94,11 @@ const updateCar = async (req, res) => {
   }
 }
 
-module.exports = { addCar, getCars, updateCar, deleteCar, getDealersCar }
+module.exports = {
+  addCar,
+  getCars,
+  updateCar,
+  deleteCar,
+  getDealersCar,
+  getSingleCar,
+}
