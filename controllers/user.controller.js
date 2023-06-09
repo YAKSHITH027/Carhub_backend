@@ -21,7 +21,7 @@ const register = async (req, res) => {
       res.status(201).send({ msg: 'user has been registerd' })
     })
   } catch (error) {
-    res.status(400).send({ msg: error.message })
+    res.status(500).send({ msg: error.message })
   }
 }
 const login = async (req, res) => {
@@ -48,20 +48,18 @@ const login = async (req, res) => {
             `${process.env.secret_key}`
           )
           console.log(token)
-          res
-            .status(200)
-            .send({
-              msg: 'login successful',
-              token,
-              userName: userInDb.userName,
-            })
+          res.status(201).send({
+            msg: 'login successful',
+            token,
+            userName: userInDb.userName,
+          })
         } else {
           res.status(400).send({ msg: 'login failed' })
         }
       }
     )
   } catch (error) {
-    res.status(400).send({ msg: error.message })
+    res.status(500).send({ msg: error.message })
   }
 }
 

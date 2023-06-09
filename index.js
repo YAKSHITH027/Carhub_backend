@@ -4,9 +4,10 @@ const { connection } = require('./db')
 const { user } = require('./routes/user.route')
 const { OEM } = require('./routes/OEM.route')
 const { marketplaceInventory } = require('./routes/marketplaceInventory.route')
+require('dotenv').config()
 
 const app = express()
-require('dotenv').config()
+
 app.use(cors())
 app.use(express.json())
 

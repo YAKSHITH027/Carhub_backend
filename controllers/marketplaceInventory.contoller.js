@@ -1,10 +1,6 @@
 const { CarDetailsModel } = require('../models/Marketplace_Inventory.model')
 
 const getCars = async (req, res) => {
-  // price: { $gte: minPrice, $lte: maxPrice },
-  //   colors: { $in: colors },
-  //   kms: { $gte: minMileage, $lte: maxMileage }
-
   try {
     let {
       maxPrice,
@@ -16,18 +12,22 @@ const getCars = async (req, res) => {
       limit,
       text,
     } = req.query
-    console.log('dd', req.query)
+
+    // this object for filtering
     let obj = {}
+    //price filter
     if (maxPrice && minPrice) obj.price = { $gte: +minPrice, $lte: +maxPrice }
+    // mileage filter
     if (maxMileage && minMileage)
       obj['OEM.mileage'] = { $gte: minMileage, $lte: maxMileage }
+    // color filter
     if (color) obj.orginalPaint = color
+    // full text search query
     if (text) obj.title = { $regex: text, $options: 'i' }
-
+    // adding defalut values
     page = page || 1
 
     limit = limit || 15
-    console.log('obj', obj)
 
     let allCars = await CarDetailsModel.find({
       ...obj,
@@ -40,6 +40,7 @@ const getCars = async (req, res) => {
     res.status(500).send({ msg: error.message })
   }
 }
+// this route is for  single Detailed car page
 const getSingleCar = async (req, res) => {
   let carId = req.params.carId
 
@@ -50,6 +51,8 @@ const getSingleCar = async (req, res) => {
     res.status(500).send({ msg: error.message })
   }
 }
+
+// for the profile page to get all the cars posted by particular dealer
 const getDealersCar = async (req, res) => {
   let dealerId = req.body.userId
 
