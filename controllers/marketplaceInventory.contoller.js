@@ -41,7 +41,8 @@ const getCars = async (req, res) => {
   }
 }
 const getDealersCar = async (req, res) => {
-  let dealerId = req.params.dealerId
+  let dealerId = req.body.userId
+
   try {
     let allCars = await CarDetailsModel.find({ userId: dealerId })
     res.status(200).send(allCars)

@@ -11,7 +11,7 @@ const { isAuthonticated } = require('../middlewares/isAuthonticated')
 const marketplaceInventory = express.Router()
 
 marketplaceInventory.get('/', getCars)
-marketplaceInventory.get('/:dealerId', isAuthonticated, getDealersCar)
+marketplaceInventory.get('/dealer', isAuthonticated, getDealersCar)
 marketplaceInventory.post('/add', isAuthonticated, addCar)
 marketplaceInventory.patch('/update/:carId', isAuthonticated, updateCar)
 marketplaceInventory.delete('/delete/:carId', isAuthonticated, deleteCar)
